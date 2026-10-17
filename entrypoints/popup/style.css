@@ -1,0 +1,87 @@
+:root {
+  --bg: #ffffff;
+  --fg: #1a1a1a;
+  --muted: #4d4d4d;
+  --line: #d0d0d0;
+  --accent: #1b4fd8;
+  --focus: #1b4fd8;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #17181a;
+    --fg: #f2f2f2;
+    --muted: #c4c4c4;
+    --line: #3a3c40;
+    --accent: #8fb0ff;
+    --focus: #8fb0ff;
+    color-scheme: dark;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  width: 340px;
+  background: var(--bg);
+  color: var(--fg);
+  font: 14px/1.45 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+main { padding: 14px 16px 16px; }
+
+header { display: flex; align-items: center; justify-content: space-between; }
+
+h1 { font-size: 17px; margin: 0; }
+h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin: 16px 0 6px; }
+
+.site { margin: 8px 0 0; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+
+.features { list-style: none; margin: 0; padding: 0; }
+.features li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+.count { font-variant-numeric: tabular-nums; font-weight: 600; }
+.note { grid-column: 1 / -1; color: var(--muted); font-size: 12.5px; }
+.note:empty { display: none; }
+
+.switch { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+.switch input { width: 18px; height: 18px; margin: 0; accent-color: var(--accent); }
+
+.row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 8px 0; }
+.stack { display: grid; gap: 4px; margin: 8px 0; }
+
+select, input[type='text'], input[type='password'] {
+  font: inherit;
+  color: var(--fg);
+  background: var(--bg);
+  border: 1px solid var(--muted);
+  border-radius: 6px;
+  padding: 5px 8px;
+}
+
+button {
+  font: inherit;
+  font-weight: 600;
+  color: #fff;
+  background: #1b4fd8;
+  border: 0;
+  border-radius: 6px;
+  padding: 6px 14px;
+  cursor: pointer;
+}
+
+details { margin-top: 16px; border-top: 1px solid var(--line); padding-top: 10px; }
+summary { cursor: pointer; font-weight: 600; }
+.hint { color: var(--muted); font-size: 12.5px; }
+a { color: var(--accent); }
+
+#api-status { margin-left: 8px; color: var(--muted); font-size: 12.5px; }
+
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 3px; }

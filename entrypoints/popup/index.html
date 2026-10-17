@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>A11y Fixer</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>A11y Fixer</h1>
+        <label class="switch">
+          <input type="checkbox" id="enabled" />
+          <span>On</span>
+        </label>
+      </header>
+
+      <p id="site-row" class="site">
+        <label class="switch">
+          <input type="checkbox" id="site-enabled" />
+          <span>Fix <strong id="host">this site</strong></span>
+        </label>
+      </p>
+
+      <section aria-labelledby="fixes-h">
+        <h2 id="fixes-h">On this page</h2>
+        <ul class="features">
+          <li>
+            <label class="switch"><input type="checkbox" data-feature="contrast" /><span>Contrast</span></label>
+            <span class="count" id="count-contrast">–</span>
+            <span class="note" id="note-contrast"></span>
+          </li>
+          <li>
+            <label class="switch"><input type="checkbox" data-feature="links" /><span>Link names</span></label>
+            <span class="count" id="count-links">–</span>
+            <span class="note" id="note-links"></span>
+          </li>
+          <li>
+            <label class="switch"><input type="checkbox" data-feature="images" /><span>Image descriptions</span></label>
+            <span class="count" id="count-images">–</span>
+            <span class="note" id="note-images"></span>
+          </li>
+          <li>
+            <label class="switch"><input type="checkbox" data-feature="forms" /><span>Form labels</span></label>
+            <span class="count" id="count-forms">–</span>
+            <span class="note" id="note-forms"></span>
+          </li>
+          <li>
+            <label class="switch"><input type="checkbox" data-feature="buttons" /><span>Button names</span></label>
+            <span class="count" id="count-buttons">–</span>
+            <span class="note" id="note-buttons"></span>
+          </li>
+          <li>
+            <label class="switch"><input type="checkbox" data-feature="focus" /><span>Focus ring</span></label>
+            <span class="count" id="count-focus">–</span>
+            <span class="note" id="note-focus"></span>
+          </li>
+          <li>
+            <label class="switch"><input type="checkbox" data-feature="language" /><span>Page language</span></label>
+            <span class="count" id="count-language">–</span>
+            <span class="note" id="note-language"></span>
+          </li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="opts-h">
+        <h2 id="opts-h">Options</h2>
+        <label class="row" for="level">
+          Contrast target
+          <select id="level">
+            <option value="AA">AA (4.5:1)</option>
+            <option value="AAA">AAA (7:1)</option>
+          </select>
+        </label>
+        <label class="switch row">
+          <input type="checkbox" id="show-changes" />
+          <span>Outline what changed</span>
+        </label>
+      </section>
+
+      <details id="api">
+        <summary>Image description API</summary>
+        <p class="hint">
+          Uses Google's free Gemini API tier. Get a key at
+          <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>.
+          Images you view are sent to Google, and on the free tier Google may use them to improve its products.
+        </p>
+        <label class="stack" for="key">
+          API key
+          <input type="password" id="key" autocomplete="off" spellcheck="false" />
+        </label>
+        <label class="stack" for="model">
+          Model
+          <input type="text" id="model" spellcheck="false" />
+        </label>
+        <button type="button" id="save-api">Save</button>
+        <span id="api-status" role="status"></span>
+      </details>
+    </main>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

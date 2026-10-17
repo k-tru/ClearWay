@@ -1,0 +1,20 @@
+# Dependencies (restored by npm install)
+node_modules/
+
+# WXT generated types and build output
+.wxt/
+.output/
+
+# Logs
+npm-debug.log*
+
+# Local environment files
+.env
+.env.*
+
+# Editor and OS files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
