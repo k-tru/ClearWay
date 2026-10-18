@@ -38,7 +38,7 @@ npm run e2e       # axe before/after on the demo page, Gemini mocked
 
 `npm run e2e` needs Playwright's Chromium once (`npx playwright install chromium`). It builds its own copy of the extension into `.output/chrome-mv3-e2e` with a placeholder key, so your normal build is left alone. On the demo page, axe (WCAG 2.1 A and AA) goes from 29 violations (contrast, link names, image alt, form labels, select names, button names, page language) to 0.
 
-Each bug on the demo page is marked with a `BUG` comment in `demo/index.html`. Its images are rendered from SVG by `npm run demo:images`.
+Each bug on the demo page is marked with a `BUG` comment in `demo/index.html`. Its images are rendered from SVG by `npm run demo:images`, and the extension icon by `npm run icons` (edit the SVG in `scripts/render-icons.mjs`).
 
 Code layout: `src/content/` holds one file per feature, all writing through `registry.ts` (which handles undo, counts and outlines) and one shared `MutationObserver` in `runtime.ts`. `src/background/` fetches images and calls Gemini; swap providers by replacing `describeWithGemini` in `describe.ts`.
 

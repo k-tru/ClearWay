@@ -12,7 +12,8 @@
     "test": "vitest run",
     "e2e": "node tests/e2e/demo.mjs",
     "demo": "node scripts/serve-demo.mjs",
-    "demo:images": "node scripts/render-demo-images.mjs"
+    "demo:images": "node scripts/render-demo-images.mjs",
+    "icons": "node scripts/render-icons.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",
