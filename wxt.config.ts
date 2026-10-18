@@ -6,7 +6,8 @@ export default defineConfig({
   manifest: {
     name: 'ClearWay',
     description:
-      'Fixes low contrast, vague links, missing alt text, unlabelled forms, empty buttons, missing page language and invisible focus on any page.',
+      'Fixes low contrast, vague links, missing alt text, unlabelled forms, empty buttons, ' +
+      'missing page language and invisible focus on any page.',
     permissions: ['storage', 'tabs'],
     // Needed so the service worker can fetch cross-origin image bytes for descriptions.
     host_permissions: ['<all_urls>'],

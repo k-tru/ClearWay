@@ -3,7 +3,7 @@ import { iconName, isSymbolOnly } from './icons';
 import { fixedTotal, markFixed, restore, restoreAll, setAttr } from './registry';
 import type { Feature } from './runtime';
 
-// ---- Accessible name (the subset that matters for links) -----------------------------
+// ---- Accessible name (the subset that matters for links) ---------------------------------------
 
 function hidden(el: Element): boolean {
   return el.closest('[aria-hidden="true"]') !== null || (el instanceof HTMLElement && el.hidden !== false);
@@ -44,7 +44,7 @@ export function accessibleName(a: Element): string {
   return readableText(a) || (a.getAttribute('title') ?? '').trim();
 }
 
-// ---- Detection --------------------------------------------------------------------------
+// ---- Detection ---------------------------------------------------------------------------------
 
 const GENERIC = new Set([
   'read more', 'more', 'learn more', 'click here', 'here', 'details', 'more details', 'continue',
@@ -57,7 +57,10 @@ const GENERIC = new Set([
 ]);
 
 /** Phrases that read naturally as "<phrase> about <topic>". */
-const ABOUT = new Set(['read more', 'more', 'learn more', 'more details', 'details', 'find out more', 'more info', 'see more', 'view more', 'discover more', 'continue reading', 'show more', 'view details', 'see details']);
+const ABOUT = new Set([
+  'read more', 'more', 'learn more', 'more details', 'details', 'find out more', 'more info',
+  'see more', 'view more', 'discover more', 'continue reading', 'show more', 'view details', 'see details',
+]);
 
 export function normalise(name: string): string {
   return name
@@ -73,7 +76,7 @@ export function isGeneric(name: string): boolean {
   return n === '' || GENERIC.has(n);
 }
 
-// ---- Context extraction -------------------------------------------------------------------
+// ---- Context extraction ------------------------------------------------------------------------
 
 const CARD = 'article, li, [class*="card" i], [class*="tile" i], [class*="teaser" i], [class*="post" i], [class*="item" i], figure, td';
 const HEADING = 'h1, h2, h3, h4, h5, h6, [role="heading"]';
@@ -145,7 +148,7 @@ export function findContext(link: Element, name: string): Context | null {
   return null;
 }
 
-// ---- Applying -----------------------------------------------------------------------------
+// ---- Applying ----------------------------------------------------------------------------------
 
 const unresolved = new Set<Element>();
 const described = new Set<Element>();

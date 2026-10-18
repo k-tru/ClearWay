@@ -38,7 +38,8 @@ describe('cleanTopic', () => {
   });
 
   it('caps long topics at ten words', () => {
-    expect(cleanTopic('one two three four five six seven eight nine ten eleven twelve')).toBe('one two three four five six seven eight nine ten…');
+    const long = 'one two three four five six seven eight nine ten eleven twelve';
+    expect(cleanTopic(long)).toBe('one two three four five six seven eight nine ten…');
   });
 });
 

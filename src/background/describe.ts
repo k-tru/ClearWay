@@ -9,7 +9,7 @@ const SUPPORTED = new Set(['image/png', 'image/jpeg', 'image/webp', 'image/heic'
 const MAX_SIDE = 1024;
 const MAX_CONCURRENT = 2;
 
-// ---- Cache: same image URL is described once per browser session ---------------------------
+// ---- Cache: same image URL is described once per browser session -------------------------------
 
 async function cached(url: string): Promise<Description | undefined> {
   const key = 'desc:' + url;
@@ -22,7 +22,7 @@ async function remember(url: string, d: Description) {
   });
 }
 
-// ---- Concurrency: free tiers have low per-minute limits --------------------------------------
+// ---- Concurrency: free tiers have low per-minute limits ----------------------------------------
 
 let active = 0;
 const waiting: (() => void)[] = [];
@@ -37,7 +37,7 @@ async function slot<T>(fn: () => Promise<T>): Promise<T> {
   }
 }
 
-// ---- Cooldown: after a 429, nobody calls the API until Gemini says it is worth it ---------
+// ---- Cooldown: after a 429, nobody calls the API until Gemini says it is worth it --------------
 
 const MINUTE_COOLDOWN_MS = 30_000;
 const DAILY_COOLDOWN_MS = 60 * 60_000;
@@ -48,7 +48,7 @@ function coolingDown(): DescribeResult | null {
   return { ok: false, error: cooldown.daily ? 'quota-exhausted' : 'rate-limited', retryAfterMs: cooldown.until - Date.now() };
 }
 
-// ---- Image bytes ------------------------------------------------------------------------------
+// ---- Image bytes -------------------------------------------------------------------------------
 
 function toBase64(buf: ArrayBuffer): string {
   const bytes = new Uint8Array(buf);
@@ -82,7 +82,7 @@ async function loadImage(url: string): Promise<{ mimeType: string; base64: strin
   return { mimeType: blob.type, base64: toBase64(await blob.arrayBuffer()) };
 }
 
-// ---- Entry point -----------------------------------------------------------------------------
+// ---- Entry point -------------------------------------------------------------------------------
 
 export async function describeImage(url: string, context: ImageContext): Promise<DescribeResult> {
   const hit = await cached(url);

@@ -24,12 +24,20 @@ describe('hasValidLang', () => {
 
 describe('pickLanguage', () => {
   it('returns the top language when the detector is sure', () => {
-    expect(pickLanguage({ isReliable: true, languages: [{ language: 'fr', percentage: 20 }, { language: 'en', percentage: 80 }] })).toBe('en');
+    const languages = [
+      { language: 'fr', percentage: 20 },
+      { language: 'en', percentage: 80 },
+    ];
+    expect(pickLanguage({ isReliable: true, languages })).toBe('en');
   });
 
   it('returns null when unsure, mixed or undetermined', () => {
     expect(pickLanguage({ isReliable: false, languages: [{ language: 'en', percentage: 95 }] })).toBeNull();
-    expect(pickLanguage({ isReliable: true, languages: [{ language: 'en', percentage: 50 }, { language: 'es', percentage: 50 }] })).toBeNull();
+    const mixed = [
+      { language: 'en', percentage: 50 },
+      { language: 'es', percentage: 50 },
+    ];
+    expect(pickLanguage({ isReliable: true, languages: mixed })).toBeNull();
     expect(pickLanguage({ isReliable: true, languages: [{ language: 'und', percentage: 100 }] })).toBeNull();
     expect(pickLanguage({ isReliable: true, languages: [] })).toBeNull();
   });

@@ -189,4 +189,3 @@ export const contrastFeature: Feature = {
     return { fixed: fixedTotal('contrast'), pending: 0, unresolved: unresolved.size };
   },
 };
-

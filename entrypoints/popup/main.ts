@@ -28,36 +28,16 @@ async function init() {
   for (const box of featureBoxes) box.checked = s.features[box.dataset.feature as FeatureId];
 
   enabled.addEventListener('change', async () => {
-    const isChecked = enabled.checked;
-
-    // 1. Update the UI state of all other checkboxes
-    siteEnabled.checked = isChecked;
-    showChanges.checked = isChecked;
-    for (const box of featureBoxes) {
-      box.checked = isChecked;
-    }
-
-    // 2. Prepare the updated features map
-    const features: Record<string, boolean> = {};
-    for (const box of featureBoxes) {
-      features[box.dataset.feature as FeatureId] = isChecked;
-    }
-
-    // 3. Update disabled sites list based on siteEnabled toggle
+    // The master switch turns every other switch on or off with it.
+    const on = enabled.checked;
+    siteEnabled.checked = on;
+    showChanges.checked = on;
+    for (const box of featureBoxes) box.checked = on;
+    const features = Object.fromEntries(featureBoxes.map((box) => [box.dataset.feature, on])) as Record<FeatureId, boolean>;
     const list = new Set((await loadSettings()).disabledSites);
-    if (isChecked) {
-      list.delete(host);
-    } else {
-      list.add(host);
-    }
-
-    // 4. Save all changes to settings storage
-    await saveSettings({
-      enabled: isChecked,
-      showChanges: isChecked,
-      features: features as Record<FeatureId, boolean>,
-      disabledSites: [...list],
-    });
+    if (on) list.delete(host);
+    else list.add(host);
+    await saveSettings({ enabled: on, showChanges: on, features, disabledSites: [...list] });
   });
   siteEnabled.addEventListener('change', async () => {
     const list = new Set((await loadSettings()).disabledSites);

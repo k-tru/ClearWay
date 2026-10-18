@@ -35,7 +35,10 @@ async function audit(page) {
 }
 const total = (counts) => Object.values(counts).reduce((a, b) => a + b, 0);
 
-let before, after, geminiCalls = 0, described = 0;
+let before;
+let after;
+let geminiCalls = 0;
+let described = 0;
 const userDataDir = await mkdtemp(join(tmpdir(), 'clearway-e2e-'));
 try {
   // Without the extension.

@@ -57,9 +57,8 @@ describe('findLabel', () => {
 
   it('falls back to autocomplete, a select prompt, then the field name', () => {
     expect(findLabel(control('<input autocomplete="shipping given-name">'))).toBe('First name');
-    expect(findLabel(control('<select name="hood"><option value="">Select your neighborhood</option><option>North</option></select>'))).toBe(
-      'Select your neighborhood',
-    );
+    const select = control('<select name="hood"><option value="">Select your neighborhood</option><option>North</option></select>');
+    expect(findLabel(select)).toBe('Select your neighborhood');
     expect(findLabel(control('<input name="last_name">'))).toBe('Last name');
   });
 

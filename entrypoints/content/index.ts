@@ -48,7 +48,8 @@ export default defineContentScript({
 
     chrome.runtime.onMessage.addListener((msg: ToContent, _sender, reply) => {
       if (msg.type !== 'stats') return;
-      const stats = Object.fromEntries(features.map((f) => [f.id, active.has(f.id) ? f.stats() : { fixed: 0, pending: 0, unresolved: 0, note: 'Off' }]));
+      const off = { fixed: 0, pending: 0, unresolved: 0, note: 'Off' };
+      const stats = Object.fromEntries(features.map((f) => [f.id, active.has(f.id) ? f.stats() : off]));
       reply(stats as StatsReply);
     });
   },

@@ -124,7 +124,7 @@ export function fixedTotal(feature: FeatureId): number {
   return n;
 }
 
-// ---- "Show changes" outlines -------------------------------------------------------
+// ---- "Show changes" outlines -------------------------------------------------------------------
 
 const MARK = 'data-clearway';
 

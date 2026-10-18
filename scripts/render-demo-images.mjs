@@ -13,12 +13,20 @@ const images = {
     width: 800,
     height: 450,
     svg: `
-      <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6a45c"/><stop offset="1" stop-color="#fde7c2"/></linearGradient></defs>
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#f6a45c"/><stop offset="1" stop-color="#fde7c2"/>
+        </linearGradient>
+      </defs>
       <rect width="800" height="450" fill="url(#sky)"/>
       <circle cx="600" cy="170" r="60" fill="#ffd27a"/>
       <path d="M0 300 L160 210 L320 280 L480 190 L640 270 L800 220 L800 450 L0 450 Z" fill="#7a5c8e"/>
       <rect y="330" width="800" height="120" fill="#2f6f8f"/>
-      <g fill="#f4efe6"><rect x="90" y="250" width="40" height="80"/><rect x="150" y="235" width="50" height="95"/><rect x="220" y="260" width="36" height="70"/></g>
+      <g fill="#f4efe6">
+        <rect x="90" y="250" width="40" height="80"/>
+        <rect x="150" y="235" width="50" height="95"/>
+        <rect x="220" y="260" width="36" height="70"/>
+      </g>
       <path d="M380 360 L470 360 L455 380 L395 380 Z" fill="#8b4a2b"/><path d="M425 300 L425 360 L460 355 Z" fill="#fff"/>`,
   },
   // A bar chart with readable values, so a description has something to say.
@@ -36,7 +44,8 @@ const images = {
         ['Q4', 96],
       ]
         .map(([q, v], i) => {
-          const x = 110 + i * 125, h = v * 2.8;
+          const x = 110 + i * 125;
+          const h = v * 2.8;
           return `<rect x="${x}" y="${340 - h}" width="80" height="${h}" fill="#3867d6"/>
             <text x="${x + 40}" y="${330 - h}" font-family="Arial" font-size="18" text-anchor="middle" fill="#222">${v}</text>
             <text x="${x + 40}" y="368" font-family="Arial" font-size="18" text-anchor="middle" fill="#222">${q}</text>`;
@@ -70,9 +79,8 @@ const browser = await chromium.launch();
 try {
   for (const [name, { width, height, svg }] of Object.entries(images)) {
     const page = await browser.newPage({ viewport: { width, height } });
-    await page.setContent(
-      `<body style="margin:0"><svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${svg}</svg></body>`,
-    );
+    const size = `width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"`;
+    await page.setContent(`<body style="margin:0"><svg xmlns="http://www.w3.org/2000/svg" ${size}>${svg}</svg></body>`);
     await page.screenshot({ path: join(outDir, name) });
     await page.close();
     console.log(`wrote demo/images/${name}`);

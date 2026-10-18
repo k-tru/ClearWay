@@ -85,7 +85,10 @@ function fromTokens(ts: string[]): string | null {
 }
 
 function evidence(el: Element): string {
-  const parts = [el.getAttribute('class'), el.id, el.getAttribute('name'), el.getAttribute('data-icon'), el.getAttribute('data-testid'), el.getAttribute('aria-controls')];
+  const parts = [
+    el.getAttribute('class'), el.id, el.getAttribute('name'),
+    el.getAttribute('data-icon'), el.getAttribute('data-testid'), el.getAttribute('aria-controls'),
+  ];
   const use = el.querySelector('use');
   if (use) parts.push(use.getAttribute('href') ?? use.getAttribute('xlink:href'));
   for (const child of el.querySelectorAll('i, span, svg, img, use')) {

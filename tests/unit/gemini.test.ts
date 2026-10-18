@@ -9,7 +9,10 @@ describe('parseRateLimit', () => {
   it('reads the retry delay and spots per-minute limits', () => {
     const r = parseRateLimit(
       body('Quota exceeded', [
-        { '@type': 'type.googleapis.com/google.rpc.QuotaFailure', violations: [{ quotaId: 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier' }] },
+        {
+          '@type': 'type.googleapis.com/google.rpc.QuotaFailure',
+          violations: [{ quotaId: 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier' }],
+        },
         { '@type': 'type.googleapis.com/google.rpc.RetryInfo', retryDelay: '37.2s' },
       ]),
     );
@@ -17,7 +20,8 @@ describe('parseRateLimit', () => {
   });
 
   it('spots daily and zero quotas', () => {
-    expect(parseRateLimit(body('Quota exceeded', [{ violations: [{ quotaId: 'GenerateRequestsPerDayPerProjectPerModel-FreeTier' }] }])).daily).toBe(true);
+    const perDay = [{ violations: [{ quotaId: 'GenerateRequestsPerDayPerProjectPerModel-FreeTier' }] }];
+    expect(parseRateLimit(body('Quota exceeded', perDay)).daily).toBe(true);
     expect(parseRateLimit(body('Quota exceeded for metric x, limit: 0', [])).daily).toBe(true);
     expect(parseRateLimit(body('Quota exceeded for metric x, limit: 10', [])).daily).toBe(false);
   });
