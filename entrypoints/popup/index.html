@@ -8,10 +8,10 @@
   <body>
     <main>
       <header>
-        <h1>ClearWay</h1>
+        <h1 id="title">ClearWay</h1>
         <label class="switch">
-          <input type="checkbox" id="enabled" />
-          <span>On</span>
+          <input type="checkbox" id="enabled" aria-labelledby="title enabled-label" />
+          <span id="enabled-label">On</span>
         </label>
       </header>
 
@@ -26,37 +26,58 @@
         <h2 id="fixes-h">On this page</h2>
         <ul class="features">
           <li>
-            <label class="switch"><input type="checkbox" data-feature="contrast" /><span>Contrast</span></label>
+            <label class="switch">
+              <input type="checkbox" data-feature="contrast" aria-describedby="count-contrast note-contrast" />
+              <span>Contrast</span>
+            </label>
             <span class="count" id="count-contrast">–</span>
             <span class="note" id="note-contrast"></span>
           </li>
           <li>
-            <label class="switch"><input type="checkbox" data-feature="links" /><span>Link names</span></label>
+            <label class="switch">
+              <input type="checkbox" data-feature="links" aria-describedby="count-links note-links" />
+              <span>Link names</span>
+            </label>
             <span class="count" id="count-links">–</span>
             <span class="note" id="note-links"></span>
           </li>
           <li>
-            <label class="switch"><input type="checkbox" data-feature="images" /><span>Image descriptions</span></label>
+            <label class="switch">
+              <input type="checkbox" data-feature="images" aria-describedby="count-images note-images" />
+              <span>Image descriptions</span>
+            </label>
             <span class="count" id="count-images">–</span>
             <span class="note" id="note-images"></span>
           </li>
           <li>
-            <label class="switch"><input type="checkbox" data-feature="forms" /><span>Form labels</span></label>
+            <label class="switch">
+              <input type="checkbox" data-feature="forms" aria-describedby="count-forms note-forms" />
+              <span>Form labels</span>
+            </label>
             <span class="count" id="count-forms">–</span>
             <span class="note" id="note-forms"></span>
           </li>
           <li>
-            <label class="switch"><input type="checkbox" data-feature="buttons" /><span>Button names</span></label>
+            <label class="switch">
+              <input type="checkbox" data-feature="buttons" aria-describedby="count-buttons note-buttons" />
+              <span>Button names</span>
+            </label>
             <span class="count" id="count-buttons">–</span>
             <span class="note" id="note-buttons"></span>
           </li>
           <li>
-            <label class="switch"><input type="checkbox" data-feature="focus" /><span>Focus ring</span></label>
+            <label class="switch">
+              <input type="checkbox" data-feature="focus" aria-describedby="count-focus note-focus" />
+              <span>Focus ring</span>
+            </label>
             <span class="count" id="count-focus">–</span>
             <span class="note" id="note-focus"></span>
           </li>
           <li>
-            <label class="switch"><input type="checkbox" data-feature="language" /><span>Page language</span></label>
+            <label class="switch">
+              <input type="checkbox" data-feature="language" aria-describedby="count-language note-language" />
+              <span>Page language</span>
+            </label>
             <span class="count" id="count-language">–</span>
             <span class="note" id="note-language"></span>
           </li>

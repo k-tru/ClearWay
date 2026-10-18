@@ -39,6 +39,7 @@ let before;
 let after;
 let geminiCalls = 0;
 let described = 0;
+const popupProblems = [];
 const userDataDir = await mkdtemp(join(tmpdir(), 'clearway-e2e-'));
 try {
   // Without the extension.
@@ -78,6 +79,16 @@ try {
     } while (total(after) > 0 && Date.now() < deadline);
 
     described = await page.locator('img[alt^="Auto-described: "]').count();
+
+    // The extension's own popup has to pass too, in both colour schemes.
+    const extensionId = new URL(context.serviceWorkers()[0].url()).host;
+    const popup = await context.newPage();
+    for (const colorScheme of ['light', 'dark']) {
+      await popup.emulateMedia({ colorScheme });
+      await popup.goto(`chrome-extension://${extensionId}/popup.html`);
+      const { violations } = await new AxeBuilder({ page: popup }).withTags(TAGS).analyze();
+      for (const v of violations) for (const n of v.nodes) popupProblems.push(`${colorScheme}: ${v.id} on ${n.target.join(' ')}`);
+    }
   } finally {
     await context.close();
   }
@@ -92,11 +103,14 @@ console.log('rule'.padEnd(28) + 'before'.padStart(8) + 'after'.padStart(8));
 for (const r of rules) console.log(r.padEnd(28) + String(before[r] ?? 0).padStart(8) + String(after[r] ?? 0).padStart(8));
 console.log('total'.padEnd(28) + String(total(before)).padStart(8) + String(total(after)).padStart(8));
 console.log(`\nImages described: ${described} (mocked Gemini calls: ${geminiCalls})`);
+console.log(`Popup violations: ${popupProblems.length}`);
+for (const p of popupProblems) console.log(`  ${p}`);
 
 const problems = [];
 if (total(before) === 0) problems.push('the demo page has no violations to fix');
 if (total(after) > 0) problems.push(`${total(after)} violations left after ${TIMEOUT_MS / 1000}s`);
 if (described === 0) problems.push('no image was auto-described');
+if (popupProblems.length) problems.push(`${popupProblems.length} violations in the popup`);
 if (problems.length) {
   console.error(`\nFAIL: ${problems.join('; ')}`);
   process.exit(1);
