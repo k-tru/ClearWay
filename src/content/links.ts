@@ -191,7 +191,7 @@ function heal(a: Element, duplicate: boolean) {
     // Not sure enough to rename it: point at the likely heading instead.
     let id = ctx.source.id;
     if (!id) {
-      id = `a11y-fixer-ctx-${++idSeq}`;
+      id = `clearway-ctx-${++idSeq}`;
       setAttr('links', ctx.source, 'id', id);
     }
     setAttr('links', a, 'aria-describedby', [a.getAttribute('aria-describedby'), id].filter(Boolean).join(' '));

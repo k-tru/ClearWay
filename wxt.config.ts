@@ -4,7 +4,7 @@ import { defineConfig } from 'wxt';
 
 export default defineConfig({
   manifest: {
-    name: 'A11y Fixer',
+    name: 'ClearWay',
     description:
       'Fixes low contrast, vague links, missing alt text, unlabelled forms, empty buttons, missing page language and invisible focus on any page.',
     permissions: ['storage', 'tabs'],

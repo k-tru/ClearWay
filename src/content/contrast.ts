@@ -145,13 +145,13 @@ function evaluatePlaceholder(input: HTMLElement) {
   const effective = composite(fg, bg);
   const target = level === 'AAA' ? 7 : 4.5;
   if (contrast(effective, bg) >= target) return;
-  let id = input.dataset.a11yFixerPh;
+  let id = input.dataset.clearwayPh;
   if (!id) {
     id = String(++placeholderSeq);
-    setAttr('contrast', input, 'data-a11y-fixer-ph', id);
+    setAttr('contrast', input, 'data-clearway-ph', id);
   }
   const color = toCss(fixForeground(effective, bg, target));
-  placeholderRules.set(id, `[data-a11y-fixer-ph="${id}"]::placeholder { color: ${color} !important; opacity: 1 !important; }`);
+  placeholderRules.set(id, `[data-clearway-ph="${id}"]::placeholder { color: ${color} !important; opacity: 1 !important; }`);
   setFeatureCss('contrast-placeholder', [...placeholderRules.values()].join('\n'));
 }
 

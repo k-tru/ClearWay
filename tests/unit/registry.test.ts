@@ -72,11 +72,11 @@ describe('fixed counts and outlines', () => {
     setAttr('links', el, 'aria-label', 'Link');
     markFixed('links', el);
     expect(fixedTotal('links')).toBe(1);
-    expect(el.getAttribute('data-a11y-fixer')).toBe('links');
+    expect(el.getAttribute('data-clearway')).toBe('links');
 
     restoreAll('links');
     expect(fixedTotal('links')).toBe(0);
-    expect(el.hasAttribute('data-a11y-fixer')).toBe(false);
+    expect(el.hasAttribute('data-clearway')).toBe(false);
   });
 
   it('stops counting elements removed from the page', () => {
