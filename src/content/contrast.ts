@@ -112,16 +112,13 @@ function evaluate(el: Element) {
   if ('unknown' in bg) {
     // Text over an image or gradient: we cannot know the colour behind it, so add a halo
     // instead of guessing. Page-wide textures on <html>/<body> are left alone.
-    const owner = bg.unknown;
-    if (owner === document.documentElement || owner === document.body || cs.textShadow !== 'none') return;
-    const lightText = luminance(fg) > 0.4;
-    setStyle(
-      'contrast',
-      html,
-      'text-shadow',
-      lightText ? '0 0 2px rgb(0 0 0 / 0.9), 0 0 6px rgb(0 0 0 / 0.6)' : '0 0 2px rgb(255 255 255 / 0.95), 0 0 6px rgb(255 255 255 / 0.7)',
-    );
-    haloed.add(el);
+    // const owner = bg.unknown;
+    // if (owner === document.documentElement || owner === document.body || cs.textShadow !== 'none') return;
+    // const lightText = luminance(fg) > 0.4;
+    // setStyle('contrast', html, 'background-color', lightText ? 'rgba(0, 0, 0, 0.9)' : 'rgb(255, 255, 255)');
+    // setStyle('contrast', html, 'padding', '2px 4px');
+    // setStyle('contrast', html, 'border-radius', '3px');
+    // haloed.add(el);
     return;
   }
 
