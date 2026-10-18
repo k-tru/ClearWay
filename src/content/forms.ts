@@ -4,7 +4,8 @@ import { fixedTotal, markFixed, restore, restoreAll, setAttr } from './registry'
 import type { Feature } from './runtime';
 
 const CONTROLS =
-  'input:not([type="hidden"]):not([type="submit"]):not([type="button"]):not([type="reset"]):not([type="image"]), select, textarea, [role="textbox"], [role="combobox"], [role="searchbox"], [role="spinbutton"]';
+  'input:not([type="hidden"]):not([type="submit"]):not([type="button"]):not([type="reset"]):not([type="image"]), select, textarea, ' +
+  '[role="textbox"], [role="combobox"], [role="searchbox"], [role="spinbutton"]';
 
 /** The name a screen reader would announce today, from the sources forms actually use. */
 export function controlName(el: HTMLElement): string {
@@ -28,9 +29,10 @@ const usable = (s: string) => !!s && s.length <= 80 && s.split(' ').length <= 10
 
 /** Short text right next to the control, e.g. <span>Email</span><input> or <td>Email</td><td><input></td>. */
 function adjacentText(el: Element, direction: 'before' | 'after'): string {
+  const step = (n: Node) => (direction === 'before' ? n.previousSibling : n.nextSibling);
   let node: Element | null = el;
   for (let depth = 0; node && depth < 3; depth++, node = node.parentElement) {
-    for (let sib = direction === 'before' ? node.previousSibling : node.nextSibling; sib; sib = direction === 'before' ? sib.previousSibling : sib.nextSibling) {
+    for (let sib = step(node); sib; sib = step(sib)) {
       if (sib instanceof Element && sib.matches(`${CONTROLS}, button, a[href]`)) return '';
       if (sib instanceof Element && sib.querySelector(`${CONTROLS}, button`)) return '';
       const text = tidy(sib instanceof Element ? readableText(sib) : sib.textContent ?? '');
@@ -75,8 +77,14 @@ const AUTOCOMPLETE: Record<string, string> = {
 
 const TYPE_NAMES: Record<string, string> = { email: 'Email', tel: 'Phone number', search: 'Search', url: 'Website', password: 'Password' };
 
-const NOISE = new Set(['input', 'inp', 'field', 'fld', 'txt', 'text', 'tb', 'form', 'frm', 'ctl', 'ctrl', 'el', 'id', 'val', 'value', 'data', 'js', 'the']);
-const EXPAND: Record<string, string> = { fname: 'first name', lname: 'last name', dob: 'date of birth', zip: 'zip code', addr: 'address', tel: 'phone', qty: 'quantity', pwd: 'password', pw: 'password', msg: 'message', num: 'number', q: 'search' };
+const NOISE = new Set([
+  'input', 'inp', 'field', 'fld', 'txt', 'text', 'tb', 'form', 'frm',
+  'ctl', 'ctrl', 'el', 'id', 'val', 'value', 'data', 'js', 'the',
+]);
+const EXPAND: Record<string, string> = {
+  fname: 'first name', lname: 'last name', dob: 'date of birth', zip: 'zip code', addr: 'address', tel: 'phone',
+  qty: 'quantity', pwd: 'password', pw: 'password', msg: 'message', num: 'number', q: 'search',
+};
 
 /** first_name → "First name", emailAddress → "Email address"; null for ids like "field_23". */
 export function humanise(raw: string | null): string {

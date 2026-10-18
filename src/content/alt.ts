@@ -10,7 +10,9 @@ const MIN_SIZE = 48;
 
 const FILE_NAME = /\.(png|jpe?g|gif|webp|avif|svg|bmp|tiff?|heic)$/i;
 const CAMERA_NAME = /^(img|image|dsc|dscn|pxl|photo|pic|screenshot|screen shot|untitled|file)[\s_-]*\d*/i;
-const GENERIC_ALT = new Set(['image', 'img', 'photo', 'picture', 'graphic', 'icon', 'logo', 'banner', 'thumbnail', 'placeholder', 'spacer']);
+const GENERIC_ALT = new Set([
+  'image', 'img', 'photo', 'picture', 'graphic', 'icon', 'logo', 'banner', 'thumbnail', 'placeholder', 'spacer',
+]);
 
 export function altLooksUseless(alt: string): boolean {
   const a = alt.trim().toLowerCase();
@@ -29,10 +31,13 @@ function soleContentOfControl(img: HTMLImageElement): Element | null {
 type Triage = 'skip' | 'describe';
 
 export function triage(img: HTMLImageElement): Triage {
-  if (img.closest('[aria-hidden="true"]') || img.getAttribute('role') === 'presentation' || img.getAttribute('role') === 'none') return 'skip';
-  const w = img.naturalWidth || img.width, h = img.naturalHeight || img.height;
+  const role = img.getAttribute('role');
+  if (img.closest('[aria-hidden="true"]') || role === 'presentation' || role === 'none') return 'skip';
+  const w = img.naturalWidth || img.width;
+  const h = img.naturalHeight || img.height;
   const rect = img.getBoundingClientRect();
-  if ((w && w < MIN_SIZE) || (h && h < MIN_SIZE) || (rect.width && rect.width < MIN_SIZE) || (rect.height && rect.height < MIN_SIZE)) return 'skip';
+  const tooSmall = (n: number) => n > 0 && n < MIN_SIZE;
+  if (tooSmall(w) || tooSmall(h) || tooSmall(rect.width) || tooSmall(rect.height)) return 'skip';
   if (img.hasAttribute('aria-label') || img.hasAttribute('aria-labelledby')) return 'skip';
   const alt = img.getAttribute('alt');
   if (alt === null) return 'describe';
@@ -80,7 +85,7 @@ async function transferableUrl(img: HTMLImageElement): Promise<string> {
   return canvas.toDataURL('image/jpeg', 0.85);
 }
 
-// ---- Queue: describe images just before the reader reaches them ------------------------------
+// ---- Queue: describe images just before the reader reaches them --------------------------------
 
 let running = false;
 let apiNote: string | undefined;

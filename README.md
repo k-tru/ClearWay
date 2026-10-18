@@ -11,6 +11,7 @@ A Chrome extension that fixes common accessibility failures on any page, live, f
 | **Button names** | Icon-only buttons (`×`, `☰`, search icons) are named from their symbol, icon classes or form. |
 | **Focus ring** | A visible keyboard focus ring, even where the site removes it. |
 | **Page language** | A missing `<html lang>` is detected on-device and set, so screen readers use the right voice. |
+| **Readable text** | Off by default. Switches pages to a dyslexia-friendly font (Verdana, Arial or Comic Sans, or keep the site's) with the WCAG text spacing: wider letters, words and lines. Icon fonts and code are left alone. |
 
 Every change is additive and can be undone: switching a feature off restores the page exactly. Uncertain cases are left alone.
 
@@ -33,10 +34,12 @@ The popup has a switch for each feature, per-site on/off, live counts, and **Out
 npm run dev       # Chrome with the extension loaded and hot reload
 npm run demo      # demo page with deliberate bugs at http://localhost:8080/
 npm test          # unit tests
-npm run e2e       # axe before/after on the demo page, Gemini mocked (run npm run build first)
+npm run e2e       # axe before/after on the demo page, Gemini mocked
 ```
 
-On the demo page, axe goes from 49 violations (contrast, link names, image alt, form labels, button names, page language) to 0.
+`npm run e2e` needs Playwright's Chromium once (`npx playwright install chromium`). It builds its own copy of the extension into `.output/chrome-mv3-e2e` with a placeholder key, so your normal build is left alone. On the demo page, axe (WCAG 2.1 A and AA) goes from 29 violations (contrast, link names, image alt, form labels, select names, button names, page language) to 0.
+
+Each bug on the demo page is marked with a `BUG` comment in `demo/index.html`. Its images are rendered from SVG by `npm run demo:images`, and the extension icon by `npm run icons` (edit the SVG in `scripts/render-icons.mjs`).
 
 Code layout: `src/content/` holds one file per feature, all writing through `registry.ts` (which handles undo, counts and outlines) and one shared `MutationObserver` in `runtime.ts`. `src/background/` fetches images and calls Gemini; swap providers by replacing `describeWithGemini` in `describe.ts`.
 

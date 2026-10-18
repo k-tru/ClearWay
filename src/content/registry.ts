@@ -24,6 +24,7 @@ const fixedCount: Record<FeatureId, Set<Element>> = {
   buttons: new Set(),
   focus: new Set(),
   language: new Set(),
+  reading: new Set(),
 };
 
 let suppress: (fn: () => void) => void = (fn) => fn();
@@ -124,9 +125,9 @@ export function fixedTotal(feature: FeatureId): number {
   return n;
 }
 
-// ---- "Show changes" outlines -------------------------------------------------------
+// ---- "Show changes" outlines -------------------------------------------------------------------
 
-const MARK = 'data-a11y-fixer';
+const MARK = 'data-clearway';
 
 function markChanged(el: Element, feature: FeatureId) {
   const set = new Set((el.getAttribute(MARK) ?? '').split(' ').filter(Boolean));
@@ -143,11 +144,11 @@ function unmarkChanged(el: Element, feature: FeatureId) {
 }
 
 const OUTLINE_CSS = `
-html[data-a11y-fixer-show] [data-a11y-fixer~="contrast"] { outline: 2px dashed #0a7d32 !important; outline-offset: 1px !important; }
-html[data-a11y-fixer-show] [data-a11y-fixer~="links"] { outline: 3px solid #1b4fd8 !important; outline-offset: 2px !important; }
-html[data-a11y-fixer-show] [data-a11y-fixer~="images"] { outline: 4px solid #b3261e !important; outline-offset: 2px !important; }
-html[data-a11y-fixer-show] [data-a11y-fixer~="forms"] { outline: 3px solid #7c3aed !important; outline-offset: 2px !important; }
-html[data-a11y-fixer-show] [data-a11y-fixer~="buttons"] { outline: 3px solid #c2410c !important; outline-offset: 2px !important; }
+html[data-clearway-show] [data-clearway~="contrast"] { outline: 2px dashed #0a7d32 !important; outline-offset: 1px !important; }
+html[data-clearway-show] [data-clearway~="links"] { outline: 3px solid #1b4fd8 !important; outline-offset: 2px !important; }
+html[data-clearway-show] [data-clearway~="images"] { outline: 4px solid #b3261e !important; outline-offset: 2px !important; }
+html[data-clearway-show] [data-clearway~="forms"] { outline: 3px solid #7c3aed !important; outline-offset: 2px !important; }
+html[data-clearway-show] [data-clearway~="buttons"] { outline: 3px solid #c2410c !important; outline-offset: 2px !important; }
 `;
 
 let styleEl: HTMLStyleElement | null = null;
@@ -159,7 +160,7 @@ export function setShowChanges(on: boolean) {
       styleEl.textContent = OUTLINE_CSS;
       (document.head ?? document.documentElement).append(styleEl);
     }
-    document.documentElement.toggleAttribute('data-a11y-fixer-show', on);
+    document.documentElement.toggleAttribute('data-clearway-show', on);
   });
 }
 
@@ -175,7 +176,7 @@ export function setFeatureCss(id: string, css: string) {
     }
     if (!el) {
       el = document.createElement('style');
-      el.dataset.a11yFixerSheet = id;
+      el.dataset.clearwaySheet = id;
       (document.head ?? document.documentElement).append(el);
       featureSheets.set(id, el);
     }

@@ -48,7 +48,8 @@ export function buildPrompt(ctx: ImageContext): string {
     'Rules:',
     '- Say what the image communicates in this context, purpose first. Do not start with "image of", "picture of" or "photo of".',
     '- Photos and illustrations: one sentence, under 25 words.',
-    '- Charts and graphs: say the chart type, what it measures, the time range or categories, and the main trend or key values, in under 45 words.',
+    '- Charts and graphs: say the chart type, what it measures, the time range or categories, ' +
+      'and the main trend or key values, in under 45 words.',
     '- Screenshots or images of text: summarise the text it contains in under 40 words.',
     '- Logos: the organisation name followed by "logo". If it is a link, describe where the link goes instead.',
     '- If the image is purely decorative, set kind to "decorative".',

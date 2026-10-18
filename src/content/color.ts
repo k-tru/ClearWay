@@ -72,7 +72,9 @@ interface OKLCH {
 }
 
 export function toOklch(c: RGBA): OKLCH {
-  const r = toLinear(c.r), g = toLinear(c.g), b = toLinear(c.b);
+  const r = toLinear(c.r);
+  const g = toLinear(c.g);
+  const b = toLinear(c.b);
   const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
   const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
   const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
@@ -84,7 +86,8 @@ export function toOklch(c: RGBA): OKLCH {
 
 /** Returns linear sRGB 0-1 without clamping, so callers can test the gamut. */
 function oklchToRgbRaw({ L, C, h }: OKLCH): [number, number, number] {
-  const A = C * Math.cos(h), B = C * Math.sin(h);
+  const A = C * Math.cos(h);
+  const B = C * Math.sin(h);
   const l = (L + 0.3963377774 * A + 0.2158037573 * B) ** 3;
   const m = (L - 0.1055613458 * A - 0.0638541728 * B) ** 3;
   const s = (L - 0.0894841775 * A - 1.291485548 * B) ** 3;
@@ -101,7 +104,8 @@ const inGamut = (lin: number[]) => lin.every((v) => v >= -1e-4 && v <= 1 + 1e-4)
 export function fromOklch(c: OKLCH): RGBA {
   let lin = oklchToRgbRaw(c);
   if (!inGamut(lin)) {
-    let lo = 0, hi = c.C;
+    let lo = 0;
+    let hi = c.C;
     for (let i = 0; i < 20; i++) {
       const mid = (lo + hi) / 2;
       if (inGamut(oklchToRgbRaw({ ...c, C: mid }))) lo = mid;
@@ -123,7 +127,8 @@ export const WHITE: RGBA = { r: 255, g: 255, b: 255, a: 1 };
  */
 export function fixForeground(fg: RGBA, bg: RGBA, target: number): RGBA {
   const goal = target + 0.02; // headroom for rounding
-  const towardBlack = contrast(BLACK, bg), towardWhite = contrast(WHITE, bg);
+  const towardBlack = contrast(BLACK, bg);
+  const towardWhite = contrast(WHITE, bg);
   let dark = luminance(fg) <= luminance(bg);
   if (dark && towardBlack < goal && towardWhite > towardBlack) dark = false;
   if (!dark && towardWhite < goal && towardBlack > towardWhite) dark = true;
@@ -131,7 +136,8 @@ export function fixForeground(fg: RGBA, bg: RGBA, target: number): RGBA {
   if (contrast(extreme, bg) < goal) return extreme;
 
   const start = toOklch(fg);
-  let lo = start.L, hi = dark ? 0 : 1;
+  let lo = start.L;
+  let hi = dark ? 0 : 1;
   let best = extreme;
   for (let i = 0; i < 24; i++) {
     const mid = (lo + hi) / 2;
