@@ -1,0 +1,159 @@
+<!doctype html>
+<!--
+  ClearWay demo page. Every accessibility bug here is deliberate; each one is marked
+  BUG with the feature that should fix it. Serve with `npm run demo`.
+-->
+<!-- BUG (language): no lang attribute on <html>. -->
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Harbour Gazette: ClearWay demo</title>
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; font: 16px/1.5 Georgia, serif; color: #333; background: #fff; }
+      /* BUG (focus): the keyboard focus ring is removed everywhere. */
+      :focus { outline: none; }
+      header { display: flex; align-items: center; gap: 16px; padding: 12px 24px; border-bottom: 1px solid #ddd; }
+      header nav { flex: 1; }
+      header nav a { margin-right: 12px; color: #444; text-decoration: none; }
+      .icon-btn { width: 36px; height: 36px; border: 1px solid #ccc; border-radius: 6px; background: #fff; cursor: pointer; }
+      .bars, .bars::before, .bars::after { display: block; width: 18px; height: 2px; margin: 4px auto; background: #333; content: ''; }
+      .banner { display: flex; justify-content: space-between; align-items: center; padding: 10px 24px; background: #e3f0ff; }
+      /* BUG (contrast): light blue on light blue, about 2:1. */
+      .banner p { margin: 0; color: #7aa7e0; }
+      .hero { padding: 48px 24px; background: linear-gradient(90deg, #ffe0b2, #ffcc80); }
+      /* BUG (contrast): orange text on an orange gradient. */
+      .hero h1 { margin: 0 0 8px; color: #ffa040; font-size: 40px; }
+      .hero p { margin: 0; color: #c88a40; }
+      main { max-width: 960px; margin: 0 auto; padding: 24px; }
+      .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+      .card { border: 1px solid #e2e2e2; border-radius: 8px; padding: 16px; }
+      .card img { width: 100%; height: auto; border-radius: 4px; }
+      .card h3 { margin: 12px 0 4px; }
+      /* BUG (contrast): pale grey body text, about 2.3:1. */
+      .card p, .meta { color: #aaaaaa; }
+      /* BUG (contrast): pale link colour, about 2.4:1. */
+      .card a { color: #8aa4d6; }
+      .muted { color: #999999; font-size: 14px; }
+      form { display: grid; gap: 12px; max-width: 420px; }
+      .row { display: flex; gap: 8px; align-items: center; }
+      input, select, textarea { font: inherit; padding: 6px 8px; border: 1px solid #bbb; border-radius: 4px; }
+      table { border-collapse: collapse; margin-top: 8px; }
+      th, td { border: 1px solid #ddd; padding: 6px 10px; text-align: left; }
+      .submit { padding: 8px 14px; border: 0; border-radius: 4px; background: #1f2a44; color: #fff; font: inherit; cursor: pointer; }
+      footer { padding: 24px; border-top: 1px solid #ddd; display: flex; gap: 12px; align-items: center; }
+      footer a { display: inline-block; width: 32px; height: 32px; border-radius: 50%; background: #1f2a44; }
+      footer .copy { margin-left: auto; color: #b0b0b0; font-size: 14px; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <!-- BUG (images): the logo is the link's only content and its alt is empty, so the link has no name. -->
+      <a href="/"><img src="images/logo.png" alt="" width="180" height="48" /></a>
+      <nav id="site-nav" aria-label="Main navigation">
+        <a href="#news">News</a>
+        <a href="#shop">Shop</a>
+        <a href="#newsletter">Newsletter</a>
+      </nav>
+      <form role="search" class="row" action="#">
+        <!-- BUG (forms): search field with no label. -->
+        <input type="search" name="q" />
+        <!-- BUG (buttons): icon-only submit button. -->
+        <button type="submit" class="icon-btn"><svg class="icon-search" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="#333" stroke-width="2" /><path d="M11 11l4 4" stroke="#333" stroke-width="2" /></svg></button>
+      </form>
+      <!-- BUG (buttons): hamburger button with no name. -->
+      <button class="icon-btn menu-toggle" aria-controls="site-nav"><span class="bars"></span></button>
+    </header>
+
+    <div class="banner">
+      <p>Free delivery on every order this week.</p>
+      <!-- BUG (buttons): close button whose only clue is its class. -->
+      <button class="icon-btn close-banner"><span class="icon icon-close"></span></button>
+    </div>
+
+    <section class="hero">
+      <h1>The Harbour Gazette</h1>
+      <p>Local news, events and the occasional mug, since 1987.</p>
+    </section>
+
+    <main>
+      <section id="news" aria-labelledby="news-h">
+        <h2 id="news-h">Latest news</h2>
+        <p>
+          The harbour festival returns this summer with music, food stalls and boat races along the waterfront.
+          Our reporters have been out across the town gathering stories from residents, shop owners and visitors.
+        </p>
+        <div class="cards">
+          <article class="card">
+            <!-- BUG (images): no alt at all. -->
+            <img src="images/harbour.png" width="800" height="450" />
+            <h3>Harbour festival returns</h3>
+            <p class="meta">Events · 3 min read</p>
+            <p>Three days of music and boat races are planned for August.</p>
+            <!-- BUG (links): "Read more" repeated with different destinations. -->
+            <a href="/news/festival">Read more</a>
+          </article>
+          <article class="card">
+            <!-- BUG (images): alt is a file name. -->
+            <img src="images/chart.png" alt="chart.png" width="640" height="400" />
+            <h3>Subscribers keep growing</h3>
+            <p class="meta">About us · 2 min read</p>
+            <p>Thank you for reading: this was our best year yet.</p>
+            <a href="/news/subscribers">Read more</a>
+          </article>
+        </div>
+        <!-- BUG (links): "Click here" with the purpose in the surrounding sentence. -->
+        <p>Want the full festival timetable? <a href="/files/timetable.pdf">Click here</a></p>
+      </section>
+
+      <section id="shop" aria-labelledby="shop-h">
+        <h2 id="shop-h">From the shop</h2>
+        <article class="card">
+          <!-- BUG (images): alt is a camera file name. -->
+          <img src="images/mug.png" alt="IMG_2041.png" width="500" height="500" style="max-width: 260px" />
+          <h3>Gazette mug</h3>
+          <p>Holds a large coffee and the morning headlines.</p>
+          <a href="/shop/mug">Learn more</a>
+          <!-- BUG (buttons): icon-only favourite button. -->
+          <button class="icon-btn"><i class="icon-heart"></i></button>
+        </article>
+        <p class="muted">Prices include VAT. Orders ship within two working days.</p>
+      </section>
+
+      <section id="newsletter" aria-labelledby="newsletter-h">
+        <h2 id="newsletter-h">Newsletter and orders</h2>
+        <form action="#">
+          <!-- BUG (forms): the visible text is not tied to the field. -->
+          <div class="row"><span>Email</span> <input type="email" /></div>
+          <!-- BUG (forms): only the name attribute says what this is. -->
+          <input type="text" name="first_name" />
+          <!-- BUG (forms): checkbox with plain text beside it. -->
+          <div class="row"><input type="checkbox" /> <span>Send me the weekly newsletter</span></div>
+          <!-- BUG (forms): select whose first option is the only label. -->
+          <select name="area">
+            <option value="">Select your neighbourhood</option>
+            <option>Old Town</option>
+            <option>Harbourside</option>
+            <option>Hilltop</option>
+          </select>
+          <!-- BUG (forms): quantity fields labelled only by the table header. -->
+          <table>
+            <thead><tr><th>Mugs</th><th>Tote bags</th></tr></thead>
+            <tbody><tr><td><input type="number" min="0" value="0" /></td><td><input type="number" min="0" value="0" /></td></tr></tbody>
+          </table>
+          <!-- BUG (buttons): submit button with no content. -->
+          <div><button type="submit" class="submit"></button></div>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <!-- BUG (links): icon-only social links. -->
+      <a href="https://example.com/twitter"><i class="fa-brands fa-twitter"></i></a>
+      <a href="https://example.com/instagram"><i class="fa-brands fa-instagram"></i></a>
+      <a href="https://example.com/github"><i class="fa-brands fa-github"></i></a>
+      <p class="copy">© Harbour Gazette. A fictional paper for testing.</p>
+    </footer>
+  </body>
+</html>
