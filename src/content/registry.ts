@@ -24,6 +24,7 @@ const fixedCount: Record<FeatureId, Set<Element>> = {
   buttons: new Set(),
   focus: new Set(),
   language: new Set(),
+  reading: new Set(),
 };
 
 let suppress: (fn: () => void) => void = (fn) => fn();

@@ -81,6 +81,14 @@
             <span class="count" id="count-language">–</span>
             <span class="note" id="note-language"></span>
           </li>
+          <li>
+            <label class="switch">
+              <input type="checkbox" data-feature="reading" aria-describedby="count-reading note-reading" />
+              <span>Readable text</span>
+            </label>
+            <span class="count" id="count-reading">–</span>
+            <span class="note" id="note-reading"></span>
+          </li>
         </ul>
       </section>
 
@@ -91,6 +99,15 @@
           <select id="level">
             <option value="AA">AA (4.5:1)</option>
             <option value="AAA">AAA (7:1)</option>
+          </select>
+        </label>
+        <label class="row" for="reading-font">
+          Readable text font
+          <select id="reading-font">
+            <option value="verdana">Verdana</option>
+            <option value="arial">Arial</option>
+            <option value="comic">Comic Sans</option>
+            <option value="site">Keep the site's font</option>
           </select>
         </label>
         <label class="switch row">

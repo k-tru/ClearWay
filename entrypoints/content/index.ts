@@ -6,6 +6,7 @@ import { focusFeature } from '../../src/content/focus';
 import { formsFeature } from '../../src/content/forms';
 import { languageFeature } from '../../src/content/language';
 import { linksFeature } from '../../src/content/links';
+import { readingFeature } from '../../src/content/reading';
 import { setShowChanges } from '../../src/content/registry';
 import { onPageChange, startObserving, type Feature } from '../../src/content/runtime';
 import type { StatsReply, ToContent } from '../../src/shared/messages';
@@ -15,7 +16,9 @@ export default defineContentScript({
   matches: ['<all_urls>'],
   runAt: 'document_idle',
   async main() {
-    const features: Feature[] = [contrastFeature, linksFeature, imagesFeature, formsFeature, buttonsFeature, focusFeature, languageFeature];
+    const features: Feature[] = [
+      contrastFeature, linksFeature, imagesFeature, formsFeature, buttonsFeature, focusFeature, languageFeature, readingFeature,
+    ];
     const host = location.hostname;
     const active = new Set<FeatureId>();
     let applied: Settings | null = null;
@@ -23,8 +26,10 @@ export default defineContentScript({
     function apply(s: Settings) {
       for (const f of features) {
         const want = isActiveOn(s, host, f.id);
-        // A new contrast level needs a fresh pass.
-        const restart = want && active.has(f.id) && f.id === 'contrast' && applied?.contrastLevel !== s.contrastLevel;
+        // A new contrast level or reading font needs a fresh start.
+        const changed =
+          (f.id === 'contrast' && applied?.contrastLevel !== s.contrastLevel) || (f.id === 'reading' && applied?.readingFont !== s.readingFont);
+        const restart = want && active.has(f.id) && changed;
         if (active.has(f.id) && (!want || restart)) {
           f.stop();
           active.delete(f.id);

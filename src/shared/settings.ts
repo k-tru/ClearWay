@@ -1,9 +1,13 @@
-export type FeatureId = 'contrast' | 'links' | 'images' | 'forms' | 'buttons' | 'focus' | 'language';
+export type FeatureId = 'contrast' | 'links' | 'images' | 'forms' | 'buttons' | 'focus' | 'language' | 'reading';
+
+/** Font for the readable text feature; 'site' keeps the page's font and only adds spacing. */
+export type ReadingFont = 'verdana' | 'arial' | 'comic' | 'site';
 
 export interface Settings {
   enabled: boolean;
   features: Record<FeatureId, boolean>;
   contrastLevel: 'AA' | 'AAA';
+  readingFont: ReadingFont;
   /** Outline every element the extension changed. Off by default. */
   showChanges: boolean;
   /** Hostnames where the user switched the extension off. */
@@ -12,8 +16,10 @@ export interface Settings {
 
 export const DEFAULT_SETTINGS: Settings = {
   enabled: true,
-  features: { contrast: true, links: true, images: true, forms: true, buttons: true, focus: true, language: true },
+  // Readable text changes how every page looks, so it is opt-in.
+  features: { contrast: true, links: true, images: true, forms: true, buttons: true, focus: true, language: true, reading: false },
   contrastLevel: 'AA',
+  readingFont: 'verdana',
   showChanges: false,
   disabledSites: [],
 };

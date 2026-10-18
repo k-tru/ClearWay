@@ -11,6 +11,7 @@ A Chrome extension that fixes common accessibility failures on any page, live, f
 | **Button names** | Icon-only buttons (`×`, `☰`, search icons) are named from their symbol, icon classes or form. |
 | **Focus ring** | A visible keyboard focus ring, even where the site removes it. |
 | **Page language** | A missing `<html lang>` is detected on-device and set, so screen readers use the right voice. |
+| **Readable text** | Off by default. Switches pages to a dyslexia-friendly font (Verdana, Arial or Comic Sans, or keep the site's) with the WCAG text spacing: wider letters, words and lines. Icon fonts and code are left alone. |
 
 Every change is additive and can be undone: switching a feature off restores the page exactly. Uncertain cases are left alone.
 
