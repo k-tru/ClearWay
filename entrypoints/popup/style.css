@@ -56,6 +56,7 @@ h2 { font-size: 0.8125rem; text-transform: uppercase; letter-spacing: 0.04em; co
 
 .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 8px 0; }
 .switch.row { justify-content: flex-start; }
+.switch:has(input:disabled), .row:has(select:disabled) { color: var(--muted); cursor: default; }
 
 select {
   font: inherit;

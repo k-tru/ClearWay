@@ -29,17 +29,12 @@ async function init() {
   showChanges.checked = s.showChanges;
   for (const box of featureBoxes) box.checked = s.features[box.dataset.feature as FeatureId];
 
+  showEnabled(s.enabled);
+
   enabled.addEventListener('change', async () => {
-    // The master switch turns every other switch on or off with it.
-    const on = enabled.checked;
-    siteEnabled.checked = on;
-    showChanges.checked = on;
-    for (const box of featureBoxes) box.checked = on;
-    const features = Object.fromEntries(featureBoxes.map((box) => [box.dataset.feature, on])) as Record<FeatureId, boolean>;
-    const list = new Set((await loadSettings()).disabledSites);
-    if (on) list.delete(host);
-    else list.add(host);
-    await saveSettings({ enabled: on, showChanges: on, features, disabledSites: [...list] });
+    // Only the master setting changes, so turning ClearWay back on restores every other choice.
+    showEnabled(enabled.checked);
+    await saveSettings({ enabled: enabled.checked });
   });
   siteEnabled.addEventListener('change', async () => {
     const list = new Set((await loadSettings()).disabledSites);
@@ -58,6 +53,11 @@ async function init() {
 
   refresh();
   setInterval(refresh, 1000);
+}
+
+/** While ClearWay is off, the other controls keep their settings but are greyed out. */
+function showEnabled(on: boolean) {
+  for (const control of [siteEnabled, level, readingFont, showChanges, ...featureBoxes]) control.disabled = !on;
 }
 
 const LABELS: Record<FeatureId, (fixed: number) => string> = {

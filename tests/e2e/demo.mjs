@@ -89,6 +89,19 @@ try {
       const { violations } = await new AxeBuilder({ page: popup }).withTags(TAGS).analyze();
       for (const v of violations) for (const n of v.nodes) popupProblems.push(`${colorScheme}: ${v.id} on ${n.target.join(' ')}`);
     }
+
+    // Turning ClearWay off and on again must keep every other choice.
+    const contrastBox = popup.locator('input[data-feature="contrast"]');
+    const readingBox = popup.locator('input[data-feature="reading"]');
+    await contrastBox.uncheck();
+    await popup.locator('#enabled').uncheck();
+    if (!(await contrastBox.isDisabled())) popupProblems.push('feature switches stay usable while ClearWay is off');
+    const { violations: offViolations } = await new AxeBuilder({ page: popup }).withTags(TAGS).analyze();
+    for (const v of offViolations) for (const n of v.nodes) popupProblems.push(`off: ${v.id} on ${n.target.join(' ')}`);
+    await popup.locator('#enabled').check();
+    await popup.reload();
+    if (await contrastBox.isChecked()) popupProblems.push('the master switch turned Contrast back on');
+    if (await readingBox.isChecked()) popupProblems.push('the master switch turned Readable text on');
   } finally {
     await context.close();
   }
@@ -103,14 +116,14 @@ console.log('rule'.padEnd(28) + 'before'.padStart(8) + 'after'.padStart(8));
 for (const r of rules) console.log(r.padEnd(28) + String(before[r] ?? 0).padStart(8) + String(after[r] ?? 0).padStart(8));
 console.log('total'.padEnd(28) + String(total(before)).padStart(8) + String(total(after)).padStart(8));
 console.log(`\nImages described: ${described} (mocked Gemini calls: ${geminiCalls})`);
-console.log(`Popup violations: ${popupProblems.length}`);
+console.log(`Popup problems: ${popupProblems.length}`);
 for (const p of popupProblems) console.log(`  ${p}`);
 
 const problems = [];
 if (total(before) === 0) problems.push('the demo page has no violations to fix');
 if (total(after) > 0) problems.push(`${total(after)} violations left after ${TIMEOUT_MS / 1000}s`);
 if (described === 0) problems.push('no image was auto-described');
-if (popupProblems.length) problems.push(`${popupProblems.length} violations in the popup`);
+if (popupProblems.length) problems.push(`${popupProblems.length} problems in the popup`);
 if (problems.length) {
   console.error(`\nFAIL: ${problems.join('; ')}`);
   process.exit(1);
