@@ -8,9 +8,6 @@ export interface Settings {
   showChanges: boolean;
   /** Hostnames where the user switched the extension off. */
   disabledSites: string[];
-  /** Image descriptions need a vision API; empty key means images are skipped. */
-  geminiApiKey: string;
-  geminiModel: string;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -19,31 +16,18 @@ export const DEFAULT_SETTINGS: Settings = {
   contrastLevel: 'AA',
   showChanges: false,
   disabledSites: [],
-  geminiApiKey: '',
-  geminiModel: 'gemini-3.5-flash-lite',
 };
 
-// The API key stays in storage.local (never synced); everything else syncs.
-const LOCAL_KEYS = ['geminiApiKey', 'geminiModel'] as const;
-
 export async function loadSettings(): Promise<Settings> {
-  const [synced, local] = await Promise.all([
-    chrome.storage.sync.get('settings'),
-    chrome.storage.local.get(LOCAL_KEYS as unknown as string[]),
-  ]);
-  const s = { ...DEFAULT_SETTINGS, ...(synced.settings as Partial<Settings> | undefined), ...local };
+  const { settings } = await chrome.storage.sync.get('settings');
+  const s = { ...DEFAULT_SETTINGS, ...(settings as Partial<Settings> | undefined) };
   s.features = { ...DEFAULT_SETTINGS.features, ...s.features };
   return s;
 }
 
 export async function saveSettings(patch: Partial<Settings>): Promise<void> {
   const current = await loadSettings();
-  const next = { ...current, ...patch };
-  const { geminiApiKey, geminiModel, ...synced } = next;
-  await Promise.all([
-    chrome.storage.sync.set({ settings: synced }),
-    chrome.storage.local.set({ geminiApiKey, geminiModel }),
-  ]);
+  await chrome.storage.sync.set({ settings: { ...current, ...patch } });
 }
 
 export function isActiveOn(s: Settings, host: string, feature: FeatureId): boolean {

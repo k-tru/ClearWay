@@ -55,9 +55,8 @@ h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; color: 
 .switch input { width: 18px; height: 18px; margin: 0; accent-color: var(--accent); }
 
 .row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 8px 0; }
-.stack { display: grid; gap: 4px; margin: 8px 0; }
 
-select, input[type='text'], input[type='password'] {
+select {
   font: inherit;
   color: var(--fg);
   background: var(--bg);
@@ -65,23 +64,5 @@ select, input[type='text'], input[type='password'] {
   border-radius: 6px;
   padding: 5px 8px;
 }
-
-button {
-  font: inherit;
-  font-weight: 600;
-  color: #fff;
-  background: #1b4fd8;
-  border: 0;
-  border-radius: 6px;
-  padding: 6px 14px;
-  cursor: pointer;
-}
-
-details { margin-top: 16px; border-top: 1px solid var(--line); padding-top: 10px; }
-summary { cursor: pointer; font-weight: 600; }
-.hint { color: var(--muted); font-size: 12.5px; }
-a { color: var(--accent); }
-
-#api-status { margin-left: 8px; color: var(--muted); font-size: 12.5px; }
 
 :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 3px; }

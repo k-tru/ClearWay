@@ -77,25 +77,6 @@
           <span>Outline what changed</span>
         </label>
       </section>
-
-      <details id="api">
-        <summary>Image description API</summary>
-        <p class="hint">
-          Uses Google's free Gemini API tier. Get a key at
-          <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>.
-          Images you view are sent to Google, and on the free tier Google may use them to improve its products.
-        </p>
-        <label class="stack" for="key">
-          API key
-          <input type="password" id="key" autocomplete="off" spellcheck="false" />
-        </label>
-        <label class="stack" for="model">
-          Model
-          <input type="text" id="model" spellcheck="false" />
-        </label>
-        <button type="button" id="save-api">Save</button>
-        <span id="api-status" role="status"></span>
-      </details>
     </main>
     <script type="module" src="./main.ts"></script>
   </body>

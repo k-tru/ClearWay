@@ -16,13 +16,14 @@ Every change is additive and can be undone: switching a feature off restores the
 
 ## Install
 
+For image descriptions, get a free Gemini API key at <https://aistudio.google.com/apikey> and put it in `.env` as `WXT_GEMINI_API_KEY`. The key is built into the extension, so rebuild after changing it, and don't share a build with your key in it. Images you view are sent to Google, and on the free tier Google may use them to improve its products.
+
 ```sh
 npm install
 npm run build
 ```
 
-1. Open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked** and select `.output/chrome-mv3`.
-2. For image descriptions, get a free Gemini API key at <https://aistudio.google.com/apikey> and paste it into the extension's popup.
+Open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked** and select `.output/chrome-mv3`.
 
 The popup has a switch for each feature, per-site on/off, live counts, and **Outline what changed** to highlight every element the extension touched.
 

@@ -23,12 +23,8 @@ export default defineContentScript({
     function apply(s: Settings) {
       for (const f of features) {
         const want = isActiveOn(s, host, f.id);
-        // A new contrast level, or a new API key for images that failed, needs a fresh pass.
-        const restart =
-          want &&
-          active.has(f.id) &&
-          ((f.id === 'contrast' && applied?.contrastLevel !== s.contrastLevel) ||
-            (f.id === 'images' && (applied?.geminiApiKey !== s.geminiApiKey || applied?.geminiModel !== s.geminiModel)));
+        // A new contrast level needs a fresh pass.
+        const restart = want && active.has(f.id) && f.id === 'contrast' && applied?.contrastLevel !== s.contrastLevel;
         if (active.has(f.id) && (!want || restart)) {
           f.stop();
           active.delete(f.id);

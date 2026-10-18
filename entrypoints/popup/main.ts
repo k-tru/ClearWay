@@ -6,8 +6,6 @@ const enabled = $<HTMLInputElement>('enabled');
 const siteEnabled = $<HTMLInputElement>('site-enabled');
 const level = $<HTMLSelectElement>('level');
 const showChanges = $<HTMLInputElement>('show-changes');
-const key = $<HTMLInputElement>('key');
-const model = $<HTMLInputElement>('model');
 const featureBoxes = [...document.querySelectorAll<HTMLInputElement>('input[data-feature]')];
 
 let tabId: number | undefined;
@@ -27,10 +25,7 @@ async function init() {
   siteEnabled.checked = !s.disabledSites.includes(host);
   level.value = s.contrastLevel;
   showChanges.checked = s.showChanges;
-  key.value = s.geminiApiKey;
-  model.value = s.geminiModel;
   for (const box of featureBoxes) box.checked = s.features[box.dataset.feature as FeatureId];
-  if (!s.geminiApiKey) ($('api') as HTMLDetailsElement).open = true;
 
   enabled.addEventListener('change', async () => {
     const isChecked = enabled.checked;
@@ -77,10 +72,6 @@ async function init() {
       const features = { ...(await loadSettings()).features, [box.dataset.feature as FeatureId]: box.checked };
       await saveSettings({ features });
     });
-  $('save-api').addEventListener('click', async () => {
-    await saveSettings({ geminiApiKey: key.value.trim(), geminiModel: model.value.trim() || 'gemini-3.5-flash-lite' });
-    $('api-status').textContent = 'Saved.';
-  });
 
   refresh();
   setInterval(refresh, 1000);

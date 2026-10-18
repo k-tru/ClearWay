@@ -1,6 +1,9 @@
 import type { DescribeResult, Description, ImageContext } from '../shared/messages';
-import { loadSettings } from '../shared/settings';
 import { describeWithGemini, VisionError } from './gemini';
+
+/** From .env at build time; empty means images are skipped. */
+const API_KEY: string = import.meta.env.WXT_GEMINI_API_KEY ?? '';
+const MODEL = 'gemini-3.5-flash-lite';
 
 const SUPPORTED = new Set(['image/png', 'image/jpeg', 'image/webp', 'image/heic', 'image/heif']);
 const MAX_SIDE = 1024;
@@ -38,10 +41,10 @@ async function slot<T>(fn: () => Promise<T>): Promise<T> {
 
 const MINUTE_COOLDOWN_MS = 30_000;
 const DAILY_COOLDOWN_MS = 60 * 60_000;
-let cooldown = { until: 0, daily: false, account: '' };
+let cooldown = { until: 0, daily: false };
 
-function coolingDown(account: string): DescribeResult | null {
-  if (cooldown.account !== account || Date.now() >= cooldown.until) return null;
+function coolingDown(): DescribeResult | null {
+  if (Date.now() >= cooldown.until) return null;
   return { ok: false, error: cooldown.daily ? 'quota-exhausted' : 'rate-limited', retryAfterMs: cooldown.until - Date.now() };
 }
 
@@ -85,17 +88,14 @@ export async function describeImage(url: string, context: ImageContext): Promise
   const hit = await cached(url);
   if (hit) return { ok: true, description: hit, cached: true };
 
-  const settings = await loadSettings();
-  if (!settings.geminiApiKey) return { ok: false, error: 'no-key' };
+  if (!API_KEY) return { ok: false, error: 'no-key' };
 
-  // A new key or model gets a fresh start.
-  const account = `${settings.geminiApiKey}|${settings.geminiModel}`;
-  const early = coolingDown(account);
+  const early = coolingDown();
   if (early) return early;
 
   return slot(async (): Promise<DescribeResult> => {
     // Another request may have hit the limit while this one waited for a slot.
-    const waited = coolingDown(account);
+    const waited = coolingDown();
     if (waited) return waited;
     let image;
     try {
@@ -104,14 +104,14 @@ export async function describeImage(url: string, context: ImageContext): Promise
       return { ok: false, error: String(e).includes('unsupported') ? 'unsupported' : 'fetch-failed', detail: String(e) };
     }
     try {
-      const description = await describeWithGemini(image, context, settings.geminiApiKey, settings.geminiModel);
+      const description = await describeWithGemini(image, context, API_KEY, MODEL);
       await remember(url, description);
       return { ok: true, description, cached: false };
     } catch (e) {
       if (e instanceof VisionError && e.code === 'rate-limited') {
         const wait = e.daily ? DAILY_COOLDOWN_MS : Math.max(e.retryAfterMs ?? 0, MINUTE_COOLDOWN_MS);
-        cooldown = { until: Date.now() + wait, daily: e.daily, account };
-        console.warn(`Gemini 429 on ${settings.geminiModel}:`, e.message);
+        cooldown = { until: Date.now() + wait, daily: e.daily };
+        console.warn(`Gemini 429 on ${MODEL}:`, e.message);
         return { ok: false, error: e.daily ? 'quota-exhausted' : 'rate-limited', detail: e.message, retryAfterMs: wait };
       }
       return { ok: false, error: 'api-error', detail: e instanceof Error ? e.message : String(e) };
