@@ -1,6 +1,6 @@
 import type { FeatureStats } from '../shared/messages';
 import type { Settings } from '../shared/settings';
-import { composite, contrast, fixForeground, luminance, parseColor, toCss, WHITE, type RGBA } from './color';
+import { composite, contrast, fixForeground, parseColor, toCss, WHITE, type RGBA } from './color';
 import { fixedTotal, isTouched, restore, restoreAll, setAttr, setFeatureCss, setStyle } from './registry';
 import { inIdleChunks, type Feature } from './runtime';
 
@@ -14,7 +14,6 @@ let running = false;
 let cancelScan: (() => void) | null = null;
 let bgMemo = new WeakMap<Element, Bg>();
 const unresolved = new Set<Element>();
-const haloed = new Set<Element>();
 const placeholderRules = new Map<string, string>();
 let placeholderSeq = 0;
 const darkQuery = matchMedia('(prefers-color-scheme: dark)');
@@ -99,7 +98,6 @@ function evaluate(el: Element) {
   // Measure the page's own colour, not ours.
   if (isTouched('contrast', el)) restore('contrast', el);
   unresolved.delete(el);
-  haloed.delete(el);
 
   const cs = getComputedStyle(html);
   const fg = parseColor(cs.color);
@@ -109,18 +107,8 @@ function evaluate(el: Element) {
   if (cs.backgroundClip === 'text' || cs.getPropertyValue('-webkit-background-clip') === 'text') return;
 
   const bg = background(html);
-  if ('unknown' in bg) {
-    // Text over an image or gradient: we cannot know the colour behind it, so add a halo
-    // instead of guessing. Page-wide textures on <html>/<body> are left alone.
-    // const owner = bg.unknown;
-    // if (owner === document.documentElement || owner === document.body || cs.textShadow !== 'none') return;
-    // const lightText = luminance(fg) > 0.4;
-    // setStyle('contrast', html, 'background-color', lightText ? 'rgba(0, 0, 0, 0.9)' : 'rgb(255, 255, 255)');
-    // setStyle('contrast', html, 'padding', '2px 4px');
-    // setStyle('contrast', html, 'border-radius', '3px');
-    // haloed.add(el);
-    return;
-  }
+  // Text over a background image: the colour behind it is unknowable, so leave it alone.
+  if ('unknown' in bg) return;
 
   const bgs = 'stops' in bg ? bg.stops : [bg];
   const worst = (c: RGBA) => Math.min(...bgs.map((b) => contrast(c, b)));
@@ -190,7 +178,6 @@ export const contrastFeature: Feature = {
     placeholderRules.clear();
     setFeatureCss('contrast-placeholder', '');
     unresolved.clear();
-    haloed.clear();
   },
   rescan(roots) {
     if (!running) return;
@@ -199,13 +186,7 @@ export const contrastFeature: Feature = {
     scan(roots);
   },
   stats(): FeatureStats {
-    const fixed = fixedTotal('contrast');
-    return {
-      fixed,
-      pending: 0,
-      unresolved: unresolved.size,
-      note: haloed.size ? `${haloed.size} over images got a halo` : undefined,
-    };
+    return { fixed: fixedTotal('contrast'), pending: 0, unresolved: unresolved.size };
   },
 };
 
