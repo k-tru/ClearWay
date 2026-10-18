@@ -17,15 +17,18 @@ export class VisionError extends Error {
 export function parseRateLimit(body: string): { retryAfterMs?: number; daily: boolean; message: string } {
   let message = 'Rate limited';
   let retryAfterMs: number | undefined;
+  // The quota kind lives in QuotaFailure.violations[].quotaId (e.g. "GenerateRequestsPerDayPerProjectPerModel-FreeTier").
+  let quotaIds = '';
   try {
     const err = JSON.parse(body).error ?? {};
     message = err.message ?? message;
     for (const d of err.details ?? []) {
       const m = /^([\d.]+)s$/.exec(d.retryDelay ?? '');
       if (m) retryAfterMs = Math.ceil(parseFloat(m[1]) * 1000);
+      for (const v of d.violations ?? []) quotaIds += ` ${v.quotaId ?? ''}`;
     }
   } catch {}
-  const daily = /per ?day|limit: ?0(?!\d)/i.test(message);
+  const daily = /per ?day|limit: ?0(?!\d)/i.test(message + quotaIds);
   return { retryAfterMs, daily, message };
 }
 

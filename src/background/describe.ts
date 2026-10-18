@@ -111,6 +111,7 @@ export async function describeImage(url: string, context: ImageContext): Promise
       if (e instanceof VisionError && e.code === 'rate-limited') {
         const wait = e.daily ? DAILY_COOLDOWN_MS : Math.max(e.retryAfterMs ?? 0, MINUTE_COOLDOWN_MS);
         cooldown = { until: Date.now() + wait, daily: e.daily, account };
+        console.warn(`Gemini 429 on ${settings.geminiModel}:`, e.message);
         return { ok: false, error: e.daily ? 'quota-exhausted' : 'rate-limited', detail: e.message, retryAfterMs: wait };
       }
       return { ok: false, error: 'api-error', detail: e instanceof Error ? e.message : String(e) };

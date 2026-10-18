@@ -184,7 +184,7 @@ async function describe(img: HTMLImageElement) {
   if (result.ok) return; // low confidence or decorative: left alone on purpose
   apiNote = {
     'no-key': 'Add a Gemini API key in the popup to describe images',
-    'rate-limited': 'Free-tier rate limit hit; waiting before retrying',
+    'rate-limited': `Free-tier rate limit hit; waiting before retrying${result.detail ? `: ${result.detail.slice(0, 160)}` : ''}`,
     'quota-exhausted': 'Free-tier quota used up; images stay as they were (try later or another key)',
     'fetch-failed': 'Could not download some images',
     unsupported: 'Some image formats are not supported',
