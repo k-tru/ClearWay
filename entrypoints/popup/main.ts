@@ -78,7 +78,7 @@ async function init() {
       await saveSettings({ features });
     });
   $('save-api').addEventListener('click', async () => {
-    await saveSettings({ geminiApiKey: key.value.trim(), geminiModel: model.value.trim() || 'gemini-flash-latest' });
+    await saveSettings({ geminiApiKey: key.value.trim(), geminiModel: model.value.trim() || 'gemini-3.5-flash-lite' });
     $('api-status').textContent = 'Saved.';
   });
 

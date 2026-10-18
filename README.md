@@ -37,7 +37,7 @@ npm run e2e       # axe before/after on the demo page, Gemini mocked (run npm ru
 
 On the demo page, axe goes from 49 violations (contrast, link names, image alt, form labels, button names, page language) to 0.
 
-Code layout: `src/content/` holds one file per feature, all writing through `registry.ts` (which handles undo, counts and outlines) and one shared `MutationObserver` in `runtime.ts`. `src/background/` fetches images and sends them to Gemini in small batches (several images per request); swap providers by replacing `describeBatchWithGemini` in `describe.ts`.
+Code layout: `src/content/` holds one file per feature, all writing through `registry.ts` (which handles undo, counts and outlines) and one shared `MutationObserver` in `runtime.ts`. `src/background/` fetches images and calls Gemini; swap providers by replacing `describeWithGemini` in `describe.ts`.
 
 ## Limits
 

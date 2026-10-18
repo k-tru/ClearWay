@@ -20,7 +20,7 @@ export const DEFAULT_SETTINGS: Settings = {
   showChanges: false,
   disabledSites: [],
   geminiApiKey: '',
-  geminiModel: 'gemini-flash-latest',
+  geminiModel: 'gemini-3.5-flash-lite',
 };
 
 // The API key stays in storage.local (never synced); everything else syncs.

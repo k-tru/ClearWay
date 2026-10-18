@@ -5,8 +5,7 @@ import { readableText } from './links';
 
 const PREFIX = 'Auto-described: ';
 const PLACEHOLDER = 'Image, describing…';
-/** Enough outstanding requests for the background to fill a batch (see BATCH_SIZE in describe.ts). */
-const MAX_IN_FLIGHT = 10;
+const MAX_IN_FLIGHT = 2;
 const MIN_SIZE = 48;
 
 const FILE_NAME = /\.(png|jpe?g|gif|webp|avif|svg|bmp|tiff?|heic)$/i;
