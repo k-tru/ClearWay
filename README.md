@@ -1,4 +1,4 @@
-# A11y Fixer
+# ClearWay
 
 A Chrome extension that fixes common accessibility failures on any page, live, for the person browsing.
 
